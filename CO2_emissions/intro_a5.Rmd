@@ -1,0 +1,44 @@
+---
+title: "Introduction"
+author: "Daisy Lee"
+date: "2022-12-09"
+output: html_document
+---
+
+This data shows the yearly amount of co2 and other greenhouse gases emitted in every country of the world. It educates others of the possible increase or decrease each year of the pollutants that are releasing into the world for us to breathe into our clean lungs. It impacts all of us as our health could really deteriorate from the unhealthy air we are breathing. So, looking at this data will give us an idea of what we should do to prevent these numbers from rising and getting worse. It is time we take action for our world. 
+
+```{r}
+library(dplyr)
+co2_emissions <- 
+  read.csv("https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv")
+
+#   What is the average value of my variable across all the counties (in the current year)?
+co2_average <- co2_emissions %>% filter(year == 2021) %>% 
+  summarise(co2 = mean(co2, na.rm = TRUE)) %>% pull(co2)
+print(co2_average)
+```
+
+The result of co2_average shows us the average of the CO2 Emissions in the year of 2021 in all the countries of the world. 
+
+```{r}
+#   Where is my variable the highest / lowest?
+co2_highest <- co2_emissions %>% filter(co2 == max(co2, na.rm = TRUE)) %>%
+  pull(country) 
+print(co2_highest)
+```
+
+The result of co2_highest provides the location with the highest amount of CO2 Emissions across the world. 
+
+```{r}
+#   How much has my variable change over the last N years?
+co2_difference_function <- function(n) {
+  co2_difference <- co2_emissions %>% group_by(year) %>% summarise(co2 = mean(co2, na.rm = TRUE)) %>% 
+    filter(year >= (2021 - (n - 1)))
+  return(co2_difference)
+}
+
+print(co2_difference_function(3))
+```
+
+The co2_difference_function function provides the user to be able to see how much CO2 Emissions have changed over whatever amount of years they would like to see. As they input over any amount of years it shows them amount over time with the years.
+
